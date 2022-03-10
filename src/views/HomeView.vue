@@ -7,7 +7,7 @@
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import LogIn from '@/components/LogIn.vue'
 import ScreenFondo from '@/components/ScreenFondo.vue'
 
 export default {
