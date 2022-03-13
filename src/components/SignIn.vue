@@ -6,8 +6,10 @@
 	<div class="d-flex justify-content-center h-100">
 		<div class="card">
 			<div class="card-header input-group-back">
-				<router-link to="/#"><span class="backscreen"><img src="../assets/back.png"></span></router-link>
-				<h3>Sign In</h3>
+				<router-link to="/confirmemail"> 
+					<ButtonBack/>
+				</router-link>
+				<h3> Recover Password</h3>
 			</div>
 			<div class="card-body">
 				<Form v-slot="{ submitForm }" :validation-schema="schema" as="div">
@@ -31,7 +33,7 @@
 							</ErrorMessage>
 						</div>
 						<div class="form-group">
-							<input type="submit" value="Save" class="btn login_btn">
+							<DesignButton />
 						</div>
 					</form>
 				</Form>
@@ -46,6 +48,8 @@ import { Form, Field, ErrorMessage } from 'vee-validate';
 //import swal from 'sweetalert';
 import ScreenFondo from '@/components/ScreenFondo.vue'
 import * as yup from 'yup';
+import DesignButton from './DesignButton.vue'
+import ButtonBack from './ButtonBack.vue'
 
 export default {
   name: 'SingIn',
@@ -54,6 +58,8 @@ export default {
 	ErrorMessage,
 	ScreenFondo,
 	Form,
+	DesignButton,
+	ButtonBack
   },
   data () {
 	const schema = yup.object({
@@ -78,25 +84,6 @@ export default {
 	submitForm(){
 
 	},
-	/*validatepassword(){
-
-		if(!(this.error = /\d/.test(this.password))){
-
-			return this.msg="Ivalid Password";
-		}	
-	},
-	login(){
-		console.log(this.email);
-	}*/
-	isRequired(){
-		if(this.password && this.password.trim()){
-			return true;
-		}
-		if(this.email && this.email.trim()){
-			return true;
-		}
-		return this.msg="Required this field";
-	} 
   }
 }
 </script>
@@ -117,7 +104,7 @@ color: red;
 margin: 0;
 padding: 0;
 word-wrap: break-word;
-font-size: 1em;
+font-size: 0.8em;
 }
 
 .card{
@@ -133,21 +120,8 @@ color: white;
 margin-right: 40px;
 }
 
-.backscreen{
-float:left;
-margin-top: 5px;
-border: 3px inset white;
-}
-
 .input-group-back{
 float: left;
-}
-
-.input-group-back span img{
-width: 25px;
-background-color: #FFC312;
-color: black;
-border: 0 !important;
 }
 
 .input-group-prepend span img{
@@ -162,16 +136,4 @@ outline: 0 0 0 0  !important;
 box-shadow: 0 0 0 0 !important;
 }
 
-.login_btn{
-color: black;
-background-color: #FFC312;
-width: 100px;
-float: center;
-margin-top:50px;
-}
-
-.login_btn:hover{
-color: black;
-background-color: white;
-}
 </style>

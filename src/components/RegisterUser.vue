@@ -5,13 +5,14 @@
 <div class="container">
 	<div class="d-flex justify-content-center h-100">
 		<div class="card">
-			<div class="card-header">
-			<h3>Log In</h3>
+			<div class="card-header input-group-back">
+				<router-link to="/login"><span class="backscreen"><img src="../assets/back.png"></span></router-link>
+				<h3>Register User</h3>
 			</div>
 			<div class="card-body">
-				<Form v-slot = "{ handleSubmit }" :validation-schema="schema">
-					<form @submit.prevent = "handleSubmit($event, logIn)">
-						<div class="input-group form-group">
+				<Form v-slot="{ submitForm }" :validation-schema="schema" as="div">
+					<form @submit.prevent="submitForm">
+                        <div class="input-group form-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text"><i class="fas fa-user"><img src="../assets/usuario.png"></i></span>
 							</div>
@@ -29,13 +30,16 @@
 								<p class="alert alert-danger">Error: {{ message }}</p>
 							</ErrorMessage>
 						</div>
-						<div class="row align-items-center">
-							<router-link to="registeruser" class="remember">Sign Up ?</router-link>
-							<router-link to="confirmemail" class="remember">Forgot Password ?</router-link>
+                        <div class="input-group form-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fas fa-key"><img src="../assets/pass.png"></i></span>
+							</div>
+							<Field name="confirmpassword" type="password" class="form-control" placeholder="Confirm Password"/>
+							<ErrorMessage name="confirmpassword" as="div" v-slot="{ message }" class="input-group form-group">
+								<p class="alert alert-danger">Error: {{ message }}</p>
+							</ErrorMessage>
 						</div>
-						
-						<div class="form-group">
-							<!--<input type="submit" value="Login" class="btn float-right login_btn" >-->
+                        <div class="form-group">
 							<DesignButton />
 						</div>
 					</form>
@@ -49,19 +53,18 @@
 <script>
 import { Form, Field, ErrorMessage } from 'vee-validate';
 //import swal from 'sweetalert';
-import * as yup from 'yup';
-import DesignButton from './DesignButton.vue';
 import ScreenFondo from '@/components/ScreenFondo.vue'
+import * as yup from 'yup';
+import DesignButton from './DesignButton.vue'
 
 export default {
-  name: 'LogIn',
-  
+  name: 'SingIn',
   components:{
 	Field,
 	ErrorMessage,
+	ScreenFondo,
 	Form,
 	DesignButton,
-	ScreenFondo,
   },
   data () {
 	const schema = yup.object({
@@ -75,24 +78,43 @@ export default {
 		.required()
 		.label("Email")
 		.matches(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-		"Type a email valid, example: aaaaaaa@domain.com")
-	});
+		"Type a email valid, example: aaaaaaa@domain.com"),
+	
+        confirmpassword: yup.string()
+		.required()
+		.min(8, "Password must be 8 characters")
+		.oneOf([yup.ref("password")], "Confirmimg Password ")
+		.label("Confirm Password"),
+    });
 	
 	return {
-		schema,
+	schema,
 	}
-},
+  },
   methods:{
-
-	async logIn(values){
-		console.log(values.email)
-		await this.axios.post('/login', values)
-		.then(resp => {
-			console.log(resp)
-		})
-	},
+	submitForm(){
 
 	},
+	/*validatepassword(){
+
+		if(!(this.error = /\d/.test(this.password))){
+
+			return this.msg="Ivalid Password";
+		}	
+	},
+	login(){
+		console.log(this.email);
+	}*/
+	isRequired(){
+		if(this.password && this.password.trim()){
+			return true;
+		}
+		if(this.email && this.email.trim()){
+			return true;
+		}
+		return this.msg="Required this field";
+	} 
+  }
 }
 </script>
 
@@ -104,6 +126,17 @@ height: 100%;
 align-content: center;
 }
 
+.input-group p{
+width: 100%;
+height: auto;
+float: center;
+color: red;
+margin: 0;
+padding: 0;
+word-wrap: break-word;
+font-size: 0.8em;
+}
+
 .card{
 height: auto;
 margin-top: 150px;
@@ -112,19 +145,26 @@ width: 400px;
 background-color: rgba(0,0,0,0.5) !important;
 }
 
-.input-group p{
-width: 100%;
-height: auto;
-float: center;
-color: red;
-margin: 0;
-padding: 0;
-font-size: 0.8em;
-word-wrap: break-word;
-}
-
 .card-header h3{
 color: white;
+margin-right: 40px;
+}
+
+.backscreen{
+float:left;
+margin-top: 5px;
+border: 3px inset white;
+}
+
+.input-group-back{
+float: left;
+}
+
+.input-group-back span img{
+width: 25px;
+background-color: #FFC312;
+color: black;
+border: 0 !important;
 }
 
 .input-group-prepend span img{
@@ -137,18 +177,6 @@ border:0 !important;
 input:focus{
 outline: 0 0 0 0  !important;
 box-shadow: 0 0 0 0 !important;
-}
-
-.remember 
-{
-width: 50%;
-height: 10px;
-margin-top: 20px;
-margin-buttom: 30px;
-margin-left: 100px;
-margin-right: 100px;
-color: white;
-text-decoration: none;
 }
 
 </style>
